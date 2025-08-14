@@ -1,0 +1,59 @@
+{
+  "name": "backend-test",
+  "version": "1.0.0",
+  "description": "backend-coding-exercise",
+  "main": "src/server.ts",
+  "repository": "https://github.com/Dunsin-cyber/backend-test.git",
+  "author": "Dunsin <ayodejiabisuwa23@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "clean": "rimraf dist",
+    "prestart": "node  dist/constants/index.js",
+    "dev": "npm run db:deploy && npm run db:init && nodemon --legacy-watch  -r tsconfig-paths/register src/server.ts",
+    "build": "npm run clean && tsc && cp src/docs/index.yaml dist/docs/index.yaml && cp -r src/prisma/ dist/prisma/",
+    "dummy": "npm run db:migrate",
+    "db:deploy": "cd ./src && npx prisma migrate deploy",
+    "db:reset": "cd ./src && npx prisma migrate reset --force",
+    "db:migrate": "cd ./src && npx prisma migrate dev --name init",
+    "db:init": "cd ./src && npx prisma generate",
+    "start": "node dist/server.js",
+    "start:prod": "npm run db:deploy:prod && npm run start",
+    "db:deploy:prod": "cd ./dist && npx prisma migrate deploy",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build"
+  },
+  "_moduleAliases": {
+    "@": "./src"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.14.0",
+    "@prisma/extension-accelerate": "^2.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
+    "morgan": "^1.10.0",
+    "tsconfig-paths": "^4.2.0",
+    "ulid": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/module-alias": "^2.0.4",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^22.13.10",
+    "@types/yamljs": "^0.2.34",
+    "nodemon": "^3.1.9",
+    "prisma": "^6.14.0",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
