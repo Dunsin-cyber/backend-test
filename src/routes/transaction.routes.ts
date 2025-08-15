@@ -43,7 +43,7 @@ router.post('/pin', handleCreateTxPIN)
  *           minLength: 4
  *           maxLength: 6
  *         required: true
- *         description: User's 4–6 digit transaction PIN
+ *         description: User's 4 digit transaction PIN
  *         example: "1234"
  *     requestBody:
  *       required: true
@@ -53,23 +53,23 @@ router.post('/pin', handleCreateTxPIN)
  *             type: object
  *             required:
  *               - amount
- *               - beneficiaryId
+ *               - beneficiaryEmail
  *             properties:
  *               amount:
  *                 type: number
  *                 description: Amount to donate
  *                 example: 50.0
- *               beneficiaryId:
+ *               beneficiaryEmail:
  *                 type: string
- *                 description: ID of the beneficiary receiving the donation
- *                 example: "clxyz123abc456def789ghi0"
+ *                 description: Email of the beneficiary receiving the donation
+ *                 example: "dunsin@exmaple.com"
  *     responses:
  *       201:
  *         description: Donation created successfully
  *       400:
  *         description: Invalid request payload or parameters
  *       401:
- *         description: Unauthorized — invalid transaction PIN
+ *         description: Unaut   horized — invalid transaction PIN
  *       500:
  *         description: Internal server error
  */

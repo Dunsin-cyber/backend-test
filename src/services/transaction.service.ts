@@ -27,6 +27,8 @@ export const createDonation = async (
         throw new AppError("Donation amount must be greater than 0", 400);
     }
 
+    // TODO: check for transcation pin if user has created one or if it matches
+
     await prisma.$transaction(async (tx) => {
 
         const donorWallet = await tx.wallet.findUnique({
