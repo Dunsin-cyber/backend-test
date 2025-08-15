@@ -7,6 +7,8 @@ import morgan from "morgan"
 import { config } from "@/constants/index"
 import { AppError } from "@/utils/AppError";
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "@/utils/swagger";
 
 
 const app = express();
@@ -27,7 +29,8 @@ app.use(cookieParser());
 
 
 
-app.use('/api/v1', V1Routes);
+app.use('/api', V1Routes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // 404 Handler
 app.all('*', (req, res, next) => {
@@ -39,7 +42,7 @@ app.use(errorHandler)
 
 
 app.listen(config.PORT, () => {
-    // Your application code here
     console.log('Application started with config Loaded up✅');
     console.log(`Server running on port ${config.PORT}`);
+    console.log(`API documentation available at 📝📚 http://localhost:${config.PORT}/api-docs`);
 });
