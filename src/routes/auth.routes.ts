@@ -34,7 +34,7 @@ const router = express.Router();
  *                 pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'
  *                 example: StrongPass123
  *     responses:
- *       200:
+ *       201:
  *         description: User created successfully
  */
 
@@ -66,7 +66,7 @@ router.post('/create', handleCreateAcc)
  *                 example: StrongPass123
  *     responses:
  *       200:
- *         description: User created successfully
+ *         description: Login successfully
  */
 
 router.post('/login', handleLoginAcc)

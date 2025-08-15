@@ -35,14 +35,41 @@ export const getUser = async (data: { email: string; password: string }) => {
     if (!userWithPassword) {
         throw new AppError("Invalid email or password", 401);
     }
-
-
     const isMatch = await utils.decryptPassword(userWithPassword.password, data.password);
     if (!isMatch) {
-        throw new AppError("Invalid email or password",401);
+        throw new AppError("Invalid email or password", 401);
     }
-
-
     const { password, ...safeUser } = userWithPassword;
     return safeUser;
 };
+
+
+
+
+export const getUserPrivateFn = async (email: string) => {
+    const user = await prisma.user.findUnique({
+        where: { email },
+    });
+
+    if (!user) {
+        throw new AppError("user does not exist", 401);
+    }
+
+    const { password, transactionPIN, ...safeUser } = user;
+    return safeUser;
+};
+
+
+export const getUserById = async (id: string) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id
+        },
+        include: {
+            wallet: true,
+            donations: true,
+            received: true
+        }
+    });
+    return user
+}

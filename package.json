@@ -15,7 +15,7 @@
     "dummy": "npm run db:migrate",
     "db:deploy": "cd ./src && npx prisma migrate deploy",
     "db:reset": "cd ./src && npx prisma migrate reset --force",
-    "db:migrate": "cd ./src && npx prisma migrate dev --name init",
+    "db:migrate": "cd ./src && npx prisma migrate dev --name add_other_models",
     "db:init": "cd ./src && npx prisma generate",
     "start": "node dist/server.js",
     "start:prod": "npm run db:deploy:prod && npm run start",

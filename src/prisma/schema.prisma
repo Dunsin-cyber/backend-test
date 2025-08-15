@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  // output = "../"
 }
 
 datasource db {
@@ -15,10 +14,44 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  name      String
+  id             String  @id @default(uuid())
+  email          String  @unique
+  password       String
+  name           String
+  transactionPIN String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  wallet    Wallet?
+  donations Donation[]
+  received  Donation[] @relation("UserReceivedDonations")
+
+  @@index([email])
+}
+
+model Wallet {
+  balance Float  @default(100000)
+  userId  String @id @unique
+  user    User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Donation {
+  id            String @id @default(uuid())
+  amount        Float
+  donorId       String
+  beneficiaryId String
+  donor         User   @relation(fields: [donorId], references: [id])
+  beneficiary   User   @relation("UserReceivedDonations", fields: [beneficiaryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([donorId])
+  @@index([beneficiaryId])
 }

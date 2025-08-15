@@ -23,7 +23,12 @@ const utils = {
     },
     validateCreateUserInput: (data: { email: string; password: string; name: string }): boolean => {
         return utils.validEmail(data.email) && utils.validPassword(data.password) && utils.validName(data.name);
-    }
+    },
+    validPIN: (pin: number): boolean => {
+        // Validates that pin is exactly 4 digits
+        const pinRegex = /^\d{4}$/;
+        return pinRegex.test(pin.toString());
+    },
 
 
 };
