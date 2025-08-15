@@ -3,7 +3,7 @@ import { handleCreateAcc } from "@/controllers/auth.controller"
 const router = express.Router();
 
 
-/** 
+/**
  * @swagger
  * /api/auth/create:
  *   post:
@@ -16,16 +16,28 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
  *               name:
  *                 type: string
+ *                 description: Must be at least 2 characters long, only letters and spaces allowed
+ *                 minLength: 2
+ *                 pattern: '^[A-Za-z ]+$'
+ *                 example: Dunsin
+ *               email:
+ *                 type: string
+ *                 description: Must be a valid email address
+ *                 format: email
+ *                 example: dunsin@example.com
+ *               password:
+ *                 type: string
+ *                 description: Must be at least 8 characters long, contain one uppercase letter, one lowercase letter, and one number
+ *                 minLength: 8
+ *                 pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'
+ *                 example: StrongPass123
  *     responses:
  *       200:
- *         description: Login successful
+ *         description: User created successfully
  */
+
 router.post('/create', handleCreateAcc)
 
 

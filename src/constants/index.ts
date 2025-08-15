@@ -8,6 +8,8 @@ dotenv.config();
 // ? doesnt parse wellif imported through this format
 const requiredEnvVars = [
     'NODE_ENV',
+    'JWT_REFRESH_SECRET',
+    'JWT_SECRET'
 ];
 
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
@@ -19,13 +21,19 @@ if (missingEnvVars.length > 0) {
 
 
 
-// ! SYSTEM CREDENTIALS
+// ? SYSTEM CREDENTIALS
 const NODE_ENV = process.env.NODE_ENV
 const PORT = process.env.PORT || 3000;
+
+// ? JWT CREDENTIALS
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 
 export const config = {
     NODE_ENV,
     PORT,
+    JWT_REFRESH_SECRET,
+    JWT_SECRET
    
 }
