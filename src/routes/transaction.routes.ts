@@ -7,7 +7,7 @@ const router = express.Router();
  * @swagger
  * /api/tx/pin:
  *   post:
- *     summary: Creates a new user
+ *     summary: Creates a transaction PIN
  *     tags: [Donation]
  *     requestBody:
  *       required: true
