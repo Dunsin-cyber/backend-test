@@ -24,7 +24,7 @@ export const createDonation = async (
     amount: number
 ) => {
     if (amount <= 0) {
-        throw new AppError("Donation amount must be greater than 0", 400);
+        throw new AppError("Donation amount must be greater than 0 :(", 400);
     }
 
     // TODO: check for transcation pin if user has created one or if it matches
