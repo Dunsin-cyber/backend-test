@@ -39,7 +39,7 @@ export const getUser = async (data: { email: string; password: string }) => {
     if (!isMatch) {
         throw new AppError("Invalid email or password", 401);
     }
-    const { password, ...safeUser } = userWithPassword;
+    const { password, transactionPIN,  ...safeUser } = userWithPassword;
     return safeUser;
 };
 
@@ -52,11 +52,9 @@ export const getUserPrivateFn = async (email: string) => {
     });
 
     if (!user) {
-        throw new AppError("user does not exist", 401);
+        throw new AppError("Beneficiary does not exist", 401);
     }
-
-    const { password, transactionPIN, ...safeUser } = user;
-    return safeUser;
+    return user;
 };
 
 

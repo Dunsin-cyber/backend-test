@@ -19,20 +19,25 @@ export const setTransactionPIN = async (userId: string, pin: number) => {
 
 //MAIN FUNCTION
 export const createDonation = async (
-    donorId: string,
+    donor: User,
     beneficiaryId: string,
-    amount: number
+    amount: number,
+    txPIN: number
 ) => {
     if (amount <= 0) {
         throw new AppError("Donation amount must be greater than 0 :(", 400);
     }
 
     // TODO: check for transcation pin if user has created one or if it matches
+    if(!utils.decryptPassword(donor.transactionPIN,txPIN.toString())) {
+        throw new AppError("Invalid transaction PIN", 401);
+    }
+
 
     await prisma.$transaction(async (tx) => {
 
         const donorWallet = await tx.wallet.findUnique({
-            where: { userId: donorId },
+            where: { userId: donor.id },
             select: { balance: true }
         });
 

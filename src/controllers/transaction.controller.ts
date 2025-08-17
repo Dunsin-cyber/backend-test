@@ -28,8 +28,13 @@ export const handleCreateTxPIN = asyncHandler(async (req: Request, res: Response
 export const handleCreateDonation = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     //TODO: check if both params are wrong too
     const { amount, beneficiaryEmail } = req.body
-    if (!amount || !utils.validEmail(beneficiaryEmail)) {
+    const txPIN = req.query.transactionPin as string;
+    if ((typeof amount != "number") || !utils.validEmail(beneficiaryEmail)) {
         throw (new AppError("Invalid input data", 400));
+    }
+
+    if (!txPIN || !utils.validPIN(+txPIN)) {
+        throw (new AppError("Invalid transaction PIN", 401));
     }
 
     const beneficiary = await getUserPrivateFn(req.body.beneficiaryEmail);
@@ -37,7 +42,7 @@ export const handleCreateDonation = asyncHandler(async (req: Request, res: Respo
 
 
     const user = (req as Request & { user?: User }).user!
-    const donation = await createDonation(user.id, beneficiary.id, req.body.amount);
+    const donation = await createDonation(user, beneficiary.id, amount, +txPIN);
 
 
     return res.status(200).json(new ApiResponse("success", donation));
