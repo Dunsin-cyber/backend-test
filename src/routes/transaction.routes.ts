@@ -9,6 +9,8 @@ const router = express.Router();
  *   post:
  *     summary: Creates a transaction PIN
  *     tags: [Donation]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -17,8 +19,8 @@ const router = express.Router();
  *             type: object
  *             properties:
  *               pin:
- *                 type: string
- *                 description: Must be exactly 4 characters long, contain only numbers
+ *                 type: number
+ *                 description: Must be exactly 4 digits long
  *                 minLength: 4
  *                 example: 1234
  *     responses:
@@ -35,6 +37,8 @@ router.post('/pin', handleCreateTxPIN)
  *   post:
  *     summary: Create a donation transaction
  *     tags: [Donation]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: transactionPin
