@@ -11,16 +11,14 @@
     "clean": "rimraf dist",
     "prestart": "node  dist/constants/index.js",
     "dev": "npm run db:deploy && npm run db:init && nodemon --legacy-watch  -r tsconfig-paths/register src/server.ts",
-    "build": "npm run clean && tsc && cp src/docs/index.yaml dist/docs/index.yaml && cp -r src/prisma/ dist/prisma/",
-    "dummy": "npm run db:migrate",
+    "build": "npm run clean && tsc && cp -r src/prisma/ dist/prisma/",
     "db:deploy": "cd ./src && npx prisma migrate deploy",
     "db:reset": "cd ./src && npx prisma migrate reset --force",
     "db:migrate": "cd ./src && npx prisma migrate dev --name add_other_models",
     "db:init": "cd ./src && npx prisma generate",
     "start": "node dist/server.js",
     "start:prod": "npm run db:deploy:prod && npm run start",
-    "db:deploy:prod": "cd ./dist && npx prisma migrate deploy",
-    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build"
+    "db:deploy:prod": "cd ./dist && npx prisma migrate deploy"
   },
   "_moduleAliases": {
     "@": "./src"

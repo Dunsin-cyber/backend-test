@@ -24,3 +24,7 @@ that measn everuthing is working, you are good to go, to the docusmtation endpoi
 
 howeverm yo test a dpeloyed verison of this serive out, visit -> but this mght break from septoemner ot mught be slow, this is becuae both the database probvider and hosting serie are free plans, and might shi=ut down anytme from now
 - the database linked to this project will expire on September 13, 2025. 
+
+
+to call the endpoints, you have to be authenticatedm, creating an account or logigign in will ie you an accessToken, this access token that rxpires in 15 mins, after getting thisw accesstoken, go to th authorixe button on th e top right corner of the wagger coumentation user insterface, and put in the vlaue, and ghen click authorie, t now you can now access proitected routes simoley by calling he endpoint in the UI
+
