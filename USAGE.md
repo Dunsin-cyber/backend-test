@@ -76,7 +76,7 @@ Now you can open the documentation link in your browser to test the APIs.
 A hosted version of this service is available at:
 
 * **Backend URL** → [https://backend-test-21ij.onrender.com](https://backend-test-21ij.onrender.com)
-* **API Docs** → [https://backend-test-21ij.onrender.com/api-docs](https://backend-test-21ij.onrender.com/api-docs)
+* **API Docs** → http://localhost:[PORT]/api-docs
 
 ⚠️ **Note**:
 
