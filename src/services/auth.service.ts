@@ -12,17 +12,19 @@ export const createUser = async (data: User) => {
 
     const user = await prisma.user.create({
         data: {
-            ...data, password: hashedPassword
+            ...data, password: hashedPassword,
+            wallet: {
+                create: {}
+            }
         },
-        select: {
-            id: true,
-            email: true,
-            name: true,
-            createdAt: true,
-            updatedAt: true
+        include: {
+            wallet: true,
+            donations: true,
+            received: true
         }
     });
-    return user
+    const { password: _, transactionPIN, ...safeUser } = user;
+    return safeUser
 }
 
 
@@ -30,6 +32,11 @@ export const createUser = async (data: User) => {
 export const getUser = async (data: { email: string; password: string }) => {
     const userWithPassword = await prisma.user.findUnique({
         where: { email: data.email },
+        include: {
+            wallet: true,
+            donations: true,
+            received: true
+        }
     });
 
     if (!userWithPassword) {
@@ -39,7 +46,7 @@ export const getUser = async (data: { email: string; password: string }) => {
     if (!isMatch) {
         throw new AppError("Invalid email or password", 401);
     }
-    const { password, transactionPIN,  ...safeUser } = userWithPassword;
+    const { password, transactionPIN, ...safeUser } = userWithPassword;
     return safeUser;
 };
 
@@ -47,6 +54,7 @@ export const getUser = async (data: { email: string; password: string }) => {
 
 
 export const getUserPrivateFn = async (email: string) => {
+    console.log("getUserPrivateFn called with email:", email);
     const user = await prisma.user.findUnique({
         where: { email },
     });

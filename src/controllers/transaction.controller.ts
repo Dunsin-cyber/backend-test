@@ -42,6 +42,9 @@ export const handleCreateDonation = asyncHandler(async (req: Request, res: Respo
 
 
     const user = (req as Request & { user?: User }).user!
+    if (!user.transactionPIN) {
+        throw new AppError("Please set a Transaction PIN first", 401);
+    }
     const donation = await createDonation(user, beneficiary.id, amount, +txPIN);
 
 
