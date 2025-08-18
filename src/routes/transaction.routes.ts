@@ -89,6 +89,23 @@ router.post('/create-donation', handleCreateDonation)
  *     tags: [Donation]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         required: false
+ *         description: Page number for pagination
+ *         example: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         required: false
+ *         description: Number of results per page
+ *         example: 10
  *     responses:
  *       200:
  *         description: List of donations made by the user
@@ -124,13 +141,30 @@ router.get("/my-donations", handleGetUserDonations);
  *         required: true
  *         description: End date for filtering donations
  *         example: "2025-12-31T23:59:59Z"
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         required: false
+ *         description: Page number for pagination
+ *         example: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         required: false
+ *         description: Number of results per page
+ *         example: 10
  *     responses:
  *       200:
  *         description: Filtered list of donations made by the user
  */
+
 router.get("/filter-donations", handleFilterDonations );
 
-// Allow a user view a single donation made to a fellow user (beneficiary)
+
 /**
  * @swagger
  * /api/tx/donation/{id}:
@@ -152,7 +186,7 @@ router.get("/filter-donations", handleFilterDonations );
  *       404:
  *         description: Donation not found
  */
-router.get("/donation/:id", handleDonationDetails )
+router.get("/donation/:id", handleDonationDetails)
 
 
 

@@ -59,7 +59,9 @@ export const handleGetUserDonations = asyncHandler(async (req: Request, res: Res
         throw new AppError("User not found", 404);
     }
 
-    const donations = await getUserDonations(user.id);
+    const { limit, page } = req.query;
+
+    const donations = await getUserDonations(user.id, page as string, limit as string);
 
     return res.status(200).json(new ApiResponse("success", donations));
 })
@@ -68,11 +70,10 @@ export const handleGetUserDonations = asyncHandler(async (req: Request, res: Res
 export const handleFilterDonations = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const user = (req as Request & { user?: User }).user!
 
-    const { start, end } = req.query;
+    const { start, end, limit, page } = req.query;
     if (!start || !end) {
         throw new AppError("Start and end dates are required", 400);
     }
-
     const startDate = new Date(start as string);
     const endDate = new Date(end as string);
 
@@ -80,7 +81,7 @@ export const handleFilterDonations = asyncHandler(async (req: Request, res: Resp
         throw new AppError("Invalid date format", 400);
     }
 
-    const donations = await donationsInPeriod(user.id, startDate, endDate);
+    const donations = await donationsInPeriod(user.id, startDate, endDate, page as string, limit as string);
 
     return res.status(200).json(new ApiResponse("success", donations));
 }

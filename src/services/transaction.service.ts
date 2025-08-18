@@ -2,7 +2,7 @@
 import { PrismaClient, User } from '@prisma/client'
 import utils from '@/utils/index';
 import { AppError } from '@/utils/AppError';
-
+import { paginate } from '@/utils/pagintion';
 
 const prisma = new PrismaClient()
 
@@ -29,7 +29,7 @@ export const createDonation = async (
     }
 
     // TODO: check for transcation pin if user has created one or if it matches
-    if(!utils.decryptPassword(donor.transactionPIN!,txPIN.toString())) {
+    if (!utils.decryptPassword(donor.transactionPIN!, txPIN.toString())) {
         throw new AppError("Invalid transaction PIN", 401);
     }
 
@@ -59,7 +59,7 @@ export const createDonation = async (
         }
 
 
-      const donated =  await tx.donation.create({
+        const donated = await tx.donation.create({
             data: {
                 amount,
                 donorId: donor.id,
@@ -95,19 +95,50 @@ export const countUserDonations = async (userId: string) => {
 };
 
 
-export const getUserDonations = async (userId: string) => {
-    return prisma.donation.findMany({
-        where: { donorId: userId },
-        include: { beneficiary: true }
-    });
+export const getUserDonations = async (userId: string, page?: string, limit?: string) => {
+    var page_;
+    var limit_;
+    if (page) {
+        page_ = +page;
+
+    }
+    if (limit) {
+        limit_ = +limit;
+
+    }
+
+    return await paginate({
+        model: 'donation',
+        where: {
+            donorId: userId,
+        },
+        include: { beneficiary: true },
+        page: page_,
+        limit: limit_
+    })
 };
 
-export const donationsInPeriod = async (userId: string, start: Date, end: Date) => {
-    const data =  prisma.donation.findMany({
+export const donationsInPeriod = async (userId: string, start: Date, end: Date, page?: string, limit?: string) => {
+    var page_;
+    var limit_;
+    if (page) {
+        page_ = +page;
+
+    }
+    if (limit) {
+        limit_ = +limit;
+
+    }
+    const data = await paginate({
+        model: 'donation',
         where: {
             donorId: userId,
             createdAt: { gte: start, lte: end }
-        }
+        },
+        orderBy: { createdAt: 'desc' },
+        include: { beneficiary: true },
+        page: page_,
+        limit: limit_
     });
     if (!data) {
         throw new AppError("No donations found in this period", 404);
