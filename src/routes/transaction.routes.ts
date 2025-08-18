@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleCreateTxPIN, handleCreateDonation } from "@/controllers/transaction.controller"
+import { handleCreateTxPIN, handleCreateDonation, handleGetUserDonations, handleFilterDonations, handleDonationDetails } from "@/controllers/transaction.controller"
 const router = express.Router();
 
 
@@ -80,5 +80,80 @@ router.post('/pin', handleCreateTxPIN)
 
 
 router.post('/create-donation', handleCreateDonation)
+
+/**
+ * @swagger
+ * /api/tx/my-donations:
+ *   get:
+ *     summary: Get all donations made by the user
+ *     tags: [Donation]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of donations made by the user
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.get("/my-donations", handleGetUserDonations);
+
+
+/**
+ * @swagger
+ * /api/tx/filter-donations:
+ *   get:
+ *     summary: Filter donations made by the user within a date range
+ *     tags: [Donation]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: start
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         required: true
+ *         description: Start date for filtering donations
+ *         example: "2023-01-01T00:00:00Z"
+ *       - in: query
+ *         name: end
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         required: true
+ *         description: End date for filtering donations
+ *         example: "2025-12-31T23:59:59Z"
+ *     responses:
+ *       200:
+ *         description: Filtered list of donations made by the user
+ */
+router.get("/filter-donations", handleFilterDonations );
+
+// Allow a user view a single donation made to a fellow user (beneficiary)
+/**
+ * @swagger
+ * /api/tx/donation/{id}:
+ *   get:
+ *     summary: Get details of a specific donation by ID
+ *     tags: [Donation]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the donation to retrieve
+ *     responses:
+ *       200:
+ *         description: Donation details retrieved successfully
+ *       404:
+ *         description: Donation not found
+ */
+router.get("/donation/:id", handleDonationDetails )
+
+
 
 export default router;

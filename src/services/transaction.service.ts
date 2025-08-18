@@ -95,20 +95,35 @@ export const countUserDonations = async (userId: string) => {
 };
 
 
-export const donationsInPeriod = async (userId: string, start: Date, end: Date) => {
+export const getUserDonations = async (userId: string) => {
     return prisma.donation.findMany({
+        where: { donorId: userId },
+        include: { beneficiary: true }
+    });
+};
+
+export const donationsInPeriod = async (userId: string, start: Date, end: Date) => {
+    const data =  prisma.donation.findMany({
         where: {
             donorId: userId,
             createdAt: { gte: start, lte: end }
         }
     });
+    if (!data) {
+        throw new AppError("No donations found in this period", 404);
+    }
+    return data;
 };
 
 
 
-export const getDonation = async (donationId: string) => {
-    return prisma.donation.findUnique({
+export const getDonationById = async (donationId: string) => {
+    const data = prisma.donation.findUnique({
         where: { id: donationId },
         include: { beneficiary: true, donor: true }
     });
+    if (!data) {
+        throw new AppError("Donation not found", 404);
+    }
+    return data;
 };
