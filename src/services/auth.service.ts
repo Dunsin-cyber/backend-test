@@ -18,7 +18,6 @@ export const createUser = async (data: User) => {
             }
         }
     });
-    // TODO: show a more readable error if error happens
     const { password: _, transactionPIN, ...safeUser } = user;
     return safeUser
 }
@@ -46,7 +45,6 @@ export const getUser = async (data: { email: string; password: string }) => {
 
 
 export const getUserPrivateFn = async (email: string) => {
-    console.log("getUserPrivateFn called with email:", email);
     const user = await prisma.user.findUnique({
         where: { email },
     });

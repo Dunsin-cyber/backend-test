@@ -35,5 +35,5 @@ export const config = {
     PORT,
     JWT_REFRESH_SECRET,
     JWT_SECRET
-   
+
 }

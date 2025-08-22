@@ -18,18 +18,20 @@ export const setTransactionPIN = async (userId: string, pin: number) => {
 
 
 //MAIN FUNCTION
+// ------------------------------------- START -----------------------
+
 export const createDonation = async (
     donor: User,
     beneficiaryId: string,
     amount: number,
-    txPIN: number
+    txPIN: string
 ) => {
     if (amount <= 0) {
         throw new AppError("Donation amount must be greater than 0 :(", 400);
     }
 
     // TODO: check for transcation pin if user has created one or if it matches
-    if (!utils.decryptPassword(donor.transactionPIN!, txPIN.toString())) {
+    if(!await utils.decryptPassword(donor.transactionPIN!, txPIN)) {
         throw new AppError("Invalid transaction PIN", 401);
     }
 
@@ -67,7 +69,7 @@ export const createDonation = async (
             }
         });
 
-
+// -------------------------STARTS HERE
         await tx.wallet.update({
             where: { userId: donor.id },
             data: { balance: { decrement: amount } }
@@ -79,13 +81,16 @@ export const createDonation = async (
             data: { balance: { increment: amount } }
         });
 
+        // -------------------------STARTS HERE
+
+
         return donated
     });
 
     return data
 };
 
-
+// ------------------------------------- END -----------------------
 
 
 export const countUserDonations = async (userId: string) => {
@@ -112,7 +117,6 @@ export const getUserDonations = async (userId: string, page?: string, limit?: st
         where: {
             donorId: userId,
         },
-        include: { beneficiary: true },
         page: page_,
         limit: limit_
     })
@@ -136,7 +140,6 @@ export const donationsInPeriod = async (userId: string, start: Date, end: Date, 
             createdAt: { gte: start, lte: end }
         },
         orderBy: { createdAt: 'desc' },
-        include: { beneficiary: true },
         page: page_,
         limit: limit_
     });
@@ -151,10 +154,11 @@ export const donationsInPeriod = async (userId: string, start: Date, end: Date, 
 export const getDonationById = async (donationId: string) => {
     const data = prisma.donation.findUnique({
         where: { id: donationId },
-        include: { beneficiary: true, donor: true }
+        // include: { beneficiary: true, donor: true }
     });
     if (!data) {
         throw new AppError("Donation not found", 404);
     }
     return data;
 };
+-

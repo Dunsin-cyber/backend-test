@@ -9,7 +9,7 @@ const utils = {
     },
     validEmail: (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+        return emailRegex.test(email.toLocaleLowerCase());
     },
     validPassword: (password: string): boolean => {
         // Example validation: at least 8 characters, one uppercase, one lowercase, one number
@@ -24,10 +24,10 @@ const utils = {
     validateCreateUserInput: (data: { email: string; password: string; name: string }): boolean => {
         return utils.validEmail(data.email) && utils.validPassword(data.password) && utils.validName(data.name);
     },
-    validPIN: (pin: number): boolean => {
-        // Validates that pin is exactly 4 digits
-        const pinRegex = /^\d{4}$/;
-        return pinRegex.test(pin.toString());
+
+    validPIN: (pin: string): boolean => {
+        const pinRegex = /^(\d{4}|\d{6})$/;
+        return pinRegex.test(pin);
     },
 
 

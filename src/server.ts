@@ -1,4 +1,5 @@
 import 'module-alias/register';
+import "../module-alias";
 import express from 'express';
 import cors from 'cors';
 import V1Routes from '@/routes/index';

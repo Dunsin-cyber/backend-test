@@ -20,9 +20,9 @@ const router = express.Router();
  *             properties:
  *               pin:
  *                 type: number
- *                 description: Must be exactly 4 digits long
+ *                 description: Must be exactly 4 or 6digits long
  *                 minLength: 4
- *                 example: 1234
+ *                 example: 123456
  *     responses:
  *       200:
  *         description: Tx Pin created successfully
@@ -39,16 +39,6 @@ router.post('/pin', handleCreateTxPIN)
  *     tags: [Donation]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: transactionPin
- *         schema:
- *           type: string
- *           minLength: 4
- *           maxLength: 6
- *         required: true
- *         description: User's 4 digit transaction PIN
- *         example: "1234"
  *     requestBody:
  *       required: true
  *       content:
@@ -67,6 +57,11 @@ router.post('/pin', handleCreateTxPIN)
  *                 type: string
  *                 description: Email of the beneficiary receiving the donation
  *                 example: "dunsin@exmaple.com"
+ *               transactionPin:
+ *                 type: string
+ *                 description: User's 4 0r 6 digit transaction PIN 
+ *                 example: "123456"
+ *                 required: true        
  *     responses:
  *       201:
  *         description: Donation created successfully

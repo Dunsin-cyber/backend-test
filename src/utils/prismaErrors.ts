@@ -1,0 +1,35 @@
+import { Prisma } from "@prisma/client";
+
+export const prismaErrorMap: Record<string, string> = {
+    // Known request errors
+    P2000: "The value you provided for a field is too long.",
+    P2001: "The record you are looking for does not exist.",
+    P2002: "Unique constraint violation. The value already exists.",
+    P2003: "Foreign key constraint failed on this field.",
+    P2004: "A constraint failed on the database.",
+    P2005: "Invalid value stored in the database for this field.",
+    P2006: "The provided value is not valid for the field type.",
+    P2007: "Data validation error.",
+    P2008: "Failed to parse the query.",
+    P2009: "Failed to validate the query.",
+    P2010: "Raw query failed. Please check the query.",
+    P2011: "Null constraint violation on a required field.",
+    P2012: "Missing required value.",
+    P2013: "Missing required argument for field.",
+    P2014: "Relation violation: a related record is missing.",
+    P2015: "A related record could not be found.",
+    P2016: "Query interpretation error.",
+    P2017: "Records for relation are not connected.",
+    P2018: "Required connected records not found.",
+    P2019: "Input error.",
+    P2020: "Value out of range for the field.",
+    P2021: "The table does not exist in the database.",
+    P2022: "The column does not exist in the database.",
+    P2023: "Inconsistent column data.",
+    P2024: "Timeout reached while querying the database.",
+    P2025: "The record you are trying to update/delete does not exist.",
+    P2026: "Unsupported feature for the database engine.",
+    P2027: "Multiple errors occurred during query execution.",
+    P2028: "Transaction API error.",
+
+};

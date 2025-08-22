@@ -20,9 +20,6 @@
     "start:prod": "npm run db:deploy:prod && npm run start",
     "db:deploy:prod": "cd ./dist && npx prisma migrate deploy"
   },
-  "_moduleAliases": {
-    "@": "./src"
-  },
   "dependencies": {
     "@prisma/client": "^6.14.0",
     "@prisma/extension-accelerate": "^2.0.2",
