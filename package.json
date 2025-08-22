@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "prestart": "node  dist/constants/index.js",
-    "dev": "npm run db:deploy && npm run db:init && nodemon --legacy-watch  -r tsconfig-paths/register src/server.ts",
+    "dev": "nodemon --legacy-watch  -r tsconfig-paths/register src/server.ts",
     "build": "npm run clean && tsc && cp -r src/prisma/ dist/prisma/",
     "db:deploy": "cd ./src && npx prisma migrate deploy",
     "db:reset": "cd ./src && npx prisma migrate reset --force",
@@ -60,7 +60,7 @@
     "typescript": "^5.8.2"
   },
   "engines": {
-    "node": "^20.14.0",
+    "node": "^22.14.0",
     "yarn": "^1.22.19"
   }
 }
