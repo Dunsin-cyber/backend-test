@@ -16,13 +16,9 @@ export const createUser = async (data: User) => {
             wallet: {
                 create: {}
             }
-        },
-        include: {
-            wallet: true,
-            donations: true,
-            received: true
         }
     });
+    // TODO: show a more readable error if error happens
     const { password: _, transactionPIN, ...safeUser } = user;
     return safeUser
 }
@@ -32,11 +28,7 @@ export const createUser = async (data: User) => {
 export const getUser = async (data: { email: string; password: string }) => {
     const userWithPassword = await prisma.user.findUnique({
         where: { email: data.email },
-        include: {
-            wallet: true,
-            donations: true,
-            received: true
-        }
+
     });
 
     if (!userWithPassword) {
@@ -65,7 +57,7 @@ export const getUserPrivateFn = async (email: string) => {
     return user;
 };
 
-
+//only used internally
 export const getUserById = async (id: string) => {
     const user = await prisma.user.findUnique({
         where: {

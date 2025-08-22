@@ -13,7 +13,7 @@ export const handleCreateAcc = asyncHandler(async (req: Request, res: Response, 
     if (!validInput) {
          throw (new AppError("Invalid input data", 400));
     }
-    const user = await createUser(req.body);
+    const user = await createUser({...req.body, email: req.body.email.toLowerCase()});
     
 
     const accessToken = jwt.sign(
