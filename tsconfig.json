@@ -18,7 +18,8 @@
     }
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "module-alias.js"
   ],
   "typeRoots": [
     "./node_modules/@types",

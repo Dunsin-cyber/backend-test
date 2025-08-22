@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ApiResponse } from "@/utils/ApiResponse";
 import { AppError } from "@/utils/AppError";
 import { Prisma } from "@prisma/client";
-import { prismaErrorMap } from "@/utils/prismaErrors";
+import { prismaErrorMap } from "@/middlewares/prismaErrors";
 
 export const errorHandler = (
     err: AppError | Error,
