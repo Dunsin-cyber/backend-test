@@ -31,7 +31,7 @@ export const createDonation = async (
     }
 
     // TODO: check for transcation pin if user has created one or if it matches
-    if(!await utils.decryptPassword(donor.transactionPIN!, txPIN)) {
+    if (!await utils.decryptPassword(donor.transactionPIN!, txPIN)) {
         throw new AppError("Invalid transaction PIN", 401);
     }
 
@@ -69,7 +69,7 @@ export const createDonation = async (
             }
         });
 
-// -------------------------STARTS HERE
+        // -------------------------STARTS HERE
         await tx.wallet.update({
             where: { userId: donor.id },
             data: { balance: { decrement: amount } }
@@ -153,7 +153,7 @@ export const donationsInPeriod = async (userId: string, start: Date, end: Date, 
 
 export const getDonationById = async (donationId: string) => {
     const data = prisma.donation.findUnique({
-        where: { id: donationId },
+        where: { id: donationId }
         // include: { beneficiary: true, donor: true }
     });
     if (!data) {
@@ -161,4 +161,4 @@ export const getDonationById = async (donationId: string) => {
     }
     return data;
 };
--
+
