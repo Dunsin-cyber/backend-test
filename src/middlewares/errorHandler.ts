@@ -12,6 +12,7 @@ export const errorHandler = (
 ) => {
     let statusCode = (err as AppError).statusCode || 500;
     let message = err.message;
+    console.log(err.message)
 
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
         // If Prisma gives us a code, check our map

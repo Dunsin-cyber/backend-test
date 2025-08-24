@@ -4,11 +4,16 @@ import { AppError } from '@/utils/AppError';
 
 const prisma = new PrismaClient()
 
+type CreateUserT = {
+    email: string;
+    password: string;
+    name: string;
+}
 
-// TODO: check if user exists first to thrpw a better error message
-export const createUser = async (data: User) => {
+export const createUser = async (data: CreateUserT) => {
     const { password } = data;
     const hashedPassword = await utils.hashPassword(password);
+
 
     const user = await prisma.user.create({
         data: {
@@ -24,22 +29,14 @@ export const createUser = async (data: User) => {
 
 
 
-export const getUser = async (data: { email: string; password: string }) => {
-    const userWithPassword = await prisma.user.findUnique({
-        where: { email: data.email },
+export const getUserByEmail = async (email: string) => {
+    const user = await prisma.user.findUnique({
+        where: { email }
+    })
 
-    });
+    return user
+}
 
-    if (!userWithPassword) {
-        throw new AppError("Invalid email or password", 401);
-    }
-    const isMatch = await utils.decryptPassword(userWithPassword.password, data.password);
-    if (!isMatch) {
-        throw new AppError("Invalid email or password", 401);
-    }
-    const { password, transactionPIN, ...safeUser } = userWithPassword;
-    return safeUser;
-};
 
 
 
@@ -49,9 +46,7 @@ export const getUserPrivateFn = async (email: string) => {
         where: { email },
     });
 
-    if (!user) {
-        throw new AppError("Beneficiary does not exist", 401);
-    }
+  
     return user;
 };
 

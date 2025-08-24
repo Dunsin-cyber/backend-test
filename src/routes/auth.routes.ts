@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleCreateAcc, handleLoginAcc } from "@/controllers/auth.controller"
+import { handleCreateAcc, handleLoginAcc, handleRefreshToken, handleLogout } from "@/controllers/auth.controller"
 const router = express.Router();
 
 
@@ -71,5 +71,40 @@ router.post('/create', handleCreateAcc)
 
 router.post('/login', handleLoginAcc)
 
+
+/**
+ * @swagger
+ * /api/auth/refresh-token:
+ *   post:
+ *     summary: Refresh access token using refresh token cookie
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: cookie
+ *         name: refreshToken
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: HTTP-only refresh token cookie
+ *     responses:
+ *       200:
+ *         description: New access token returned
+ *       401:
+ *         description: Refresh token missing or invalid
+ */
+router.post("/refresh-token", handleRefreshToken);
+
+
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   get:
+ *     summary: Logout (clears refresh token cookie)
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: User logged out and refresh token cookie cleared
+ */
+router.get("/logout", handleLogout);
 
 export default router;

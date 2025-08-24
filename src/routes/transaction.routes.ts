@@ -19,7 +19,7 @@ const router = express.Router();
  *             type: object
  *             properties:
  *               pin:
- *                 type: number
+ *                 type: string
  *                 description: Must be exactly 4 or 6digits long
  *                 minLength: 4
  *                 example: 123456
@@ -76,44 +76,10 @@ router.post('/pin', handleCreateTxPIN)
 
 router.post('/create-donation', handleCreateDonation)
 
+
 /**
  * @swagger
  * /api/tx/my-donations:
- *   get:
- *     summary: Get all donations made by the user
- *     tags: [Donation]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           minimum: 1
- *         required: false
- *         description: Page number for pagination
- *         example: 1
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           minimum: 1
- *         required: false
- *         description: Number of results per page
- *         example: 10
- *     responses:
- *       200:
- *         description: List of donations made by the user
- *       401:
- *         description: Unauthorized
- */
-
-router.get("/my-donations", handleGetUserDonations);
-
-
-/**
- * @swagger
- * /api/tx/filter-donations:
  *   get:
  *     summary: Filter donations made by the user within a date range
  *     tags: [Donation]
@@ -157,7 +123,7 @@ router.get("/my-donations", handleGetUserDonations);
  *         description: Filtered list of donations made by the user
  */
 
-router.get("/filter-donations", handleFilterDonations );
+router.get("/my-donations", handleFilterDonations);
 
 
 /**

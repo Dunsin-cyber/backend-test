@@ -29,6 +29,13 @@ const utils = {
         const pinRegex = /^(\d{4}|\d{6})$/;
         return pinRegex.test(pin);
     },
+    formatEmail: (email: string) => {
+        let formatted = email.trim();
+        formatted = formatted.toLowerCase();
+        // Collapse multiple spaces inside (shouldn’t normally exist but just in case)
+        formatted = formatted.replace(/\s+/g, "");
+        return formatted;
+    }
 
 
 };

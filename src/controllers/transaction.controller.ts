@@ -2,7 +2,7 @@ import { asyncHandler } from '@/middlewares/asyncHandler';
 import { ApiResponse } from '@/utils/ApiResponse';
 import { AppError } from '@/utils/AppError';
 import { NextFunction, Request, Response } from 'express';
-import { setTransactionPIN, createDonation, getUserDonations, donationsInPeriod, getDonationById } from '@/services/transaction.service';
+import { setTransactionPIN, createDonation, donationsInPeriod, getDonationById } from '@/services/transaction.service';
 import { getUserPrivateFn } from '@/services/auth.service';
 
 import utils from '@/utils/index';
@@ -36,14 +36,24 @@ export const handleCreateDonation = asyncHandler(async (req: Request, res: Respo
         throw (new AppError("Invalid transaction PIN", 401));
     }
 
-    const beneficiary = await getUserPrivateFn(req.body.beneficiaryEmail);
 
+
+    const beneficiary = await getUserPrivateFn(utils.formatEmail(beneficiaryEmail));
+
+    if (!beneficiary) {
+        throw new AppError("Beneficiary does not exist", 404);
+    }
 
 
     const user = (req as Request & { user?: User }).user!
     if (!user.transactionPIN) {
         throw new AppError("Please set a Transaction PIN first", 400);
     }
+
+    if (utils.formatEmail(beneficiaryEmail) === user.email) {
+        throw new AppError("You cannot Donate to Self", 401);
+    }
+
     const donation = await createDonation(user, beneficiary.id, amount, transactionPin);
 
 
@@ -51,18 +61,8 @@ export const handleCreateDonation = asyncHandler(async (req: Request, res: Respo
 
 })
 
-
+//! DEPRECATED TO FAVOUR handleFilterDonations
 export const handleGetUserDonations = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const user = (req as Request & { user?: User }).user!
-    if (!user) {
-        throw new AppError("User not found", 404);
-    }
-
-    const { limit, page } = req.query;
-
-    const donations = await getUserDonations(user.id, page as string, limit as string);
-
-    return res.status(200).json(new ApiResponse("success", donations));
 })
 
 
@@ -82,17 +82,28 @@ export const handleFilterDonations = asyncHandler(async (req: Request, res: Resp
 
     const donations = await donationsInPeriod(user.id, startDate, endDate, page as string, limit as string);
 
+    if (!donations) {
+        throw new AppError("No donations found in this period", 404);
+
+    }
+
+
     return res.status(200).json(new ApiResponse("success", donations));
 }
 )
 
+// TODO: chck if it is a valid uuid
 export const handleDonationDetails = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const donationId = req.params.id;
     if (!donationId) {
         throw new AppError("Donation ID is required", 400);
     }
 
-    const donation = await getDonationById(donationId);  
+    const donation = await getDonationById(donationId);
+
+    if (!donation) {
+        throw new AppError("Donation not found", 404);
+    }
 
     return res.status(200).json(new ApiResponse("success", donation));
 });

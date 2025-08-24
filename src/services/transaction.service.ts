@@ -19,7 +19,7 @@ export const setTransactionPIN = async (userId: string, pin: number) => {
 
 //MAIN FUNCTION
 // ------------------------------------- START -----------------------
-
+// TODO : disable send to self
 export const createDonation = async (
     donor: User,
     beneficiaryId: string,
@@ -30,7 +30,6 @@ export const createDonation = async (
         throw new AppError("Donation amount must be greater than 0 :(", 400);
     }
 
-    // TODO: check for transcation pin if user has created one or if it matches
     if (!await utils.decryptPassword(donor.transactionPIN!, txPIN)) {
         throw new AppError("Invalid transaction PIN", 401);
     }
@@ -100,28 +99,8 @@ export const countUserDonations = async (userId: string) => {
 };
 
 
-export const getUserDonations = async (userId: string, page?: string, limit?: string) => {
-    var page_;
-    var limit_;
-    if (page) {
-        page_ = +page;
 
-    }
-    if (limit) {
-        limit_ = +limit;
-
-    }
-
-    return await paginate({
-        model: 'donation',
-        where: {
-            donorId: userId,
-        },
-        page: page_,
-        limit: limit_
-    })
-};
-
+// TODO: filter my dmy and merge it into getUserDonations
 export const donationsInPeriod = async (userId: string, start: Date, end: Date, page?: string, limit?: string) => {
     var page_;
     var limit_;
@@ -143,9 +122,6 @@ export const donationsInPeriod = async (userId: string, start: Date, end: Date, 
         page: page_,
         limit: limit_
     });
-    if (!data) {
-        throw new AppError("No donations found in this period", 404);
-    }
     return data;
 };
 
@@ -156,9 +132,8 @@ export const getDonationById = async (donationId: string) => {
         where: { id: donationId }
         // include: { beneficiary: true, donor: true }
     });
-    if (!data) {
-        throw new AppError("Donation not found", 404);
-    }
+
     return data;
 };
+
 
