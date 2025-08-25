@@ -50,6 +50,8 @@ Also fill in other required values like:
 
 ---
 
+
+
 ## ▶️ Running the Project
 
 Start the development server with:
@@ -57,6 +59,9 @@ Start the development server with:
 ```bash
 yarn dev
 ```
+
+Run the seed data
+`yarn run db:seed` to create a paritie system account
 
 If everything is working, you’ll see logs like this:
 

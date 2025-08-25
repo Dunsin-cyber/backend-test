@@ -30,6 +30,6 @@ export const prismaErrorMap: Record<string, string> = {
     P2025: "The record you're trying to update or delete was not found.",
     P2026: "This operation isn't supported by the database engine.",
     P2027: "Multiple database errors occurred. Please review the request and try again.",
-    P2028: "A database transaction failed. The operation was not completed. Please"
+    P2028: "The operation was not completed. Please try again."
 
 }

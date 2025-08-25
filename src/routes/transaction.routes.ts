@@ -30,6 +30,18 @@ const router = express.Router();
 
 router.post('/pin', handleCreateTxPIN)
 
+/**
+ * @swagger
+ * /api/tx/:
+ *   get:
+ *     summary: Get all transactions made by the user
+ *     tags: [Transaction]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of transactions made by the user
+ */
 router.get("/", handleGetUserTransactions)
 
 

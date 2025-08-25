@@ -17,11 +17,13 @@ export const handleCreateDonation = asyncHandler(async (req: Request, res: Respo
         throw (new AppError("Invalid input data", 400));
     }
 
+    const user = (req as Request & { user?: User }).user!
+    if (!user.transactionPIN) {
+        throw new AppError("Please set a Transaction PIN first", 400);
+    }
     if (!transactionPin || !utils.validPIN(transactionPin)) {
         throw (new AppError("Invalid transaction PIN", 401));
     }
-
-
 
     const beneficiary = await getUserPrivateFn(utils.formatEmail(beneficiaryEmail));
 
@@ -30,10 +32,6 @@ export const handleCreateDonation = asyncHandler(async (req: Request, res: Respo
     }
 
 
-    const user = (req as Request & { user?: User }).user!
-    if (!user.transactionPIN) {
-        throw new AppError("Please set a Transaction PIN first", 400);
-    }
 
     if (utils.formatEmail(beneficiaryEmail) === user.email) {
         throw new AppError("You cannot Donate to Self", 401);

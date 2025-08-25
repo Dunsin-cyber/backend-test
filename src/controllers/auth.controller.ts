@@ -2,7 +2,7 @@ import { asyncHandler } from '@/middlewares/asyncHandler';
 import { ApiResponse } from '@/utils/ApiResponse';
 import { AppError } from '@/utils/AppError';
 import { NextFunction, Request, Response } from 'express';
-import { createUser, getUserByEmail } from '@/services/auth.service';
+import { createUser, getUserByEmail, getUserPrivateFn } from '@/services/auth.service';
 import utils from '@/utils/index';
 import jwt from 'jsonwebtoken';
 import { config } from '@/constants';
@@ -23,6 +23,9 @@ export const handleCreateAcc = asyncHandler(async (req: Request, res: Response, 
 
 
     const user = await createUser({ password, name, email: utils.formatEmail(email) });
+    if (!user) {
+        throw new AppError("Error creating an Account, please try again", 500);
+    }
 
 
     const accessToken = jwt.sign(
@@ -57,7 +60,7 @@ export const handleLoginAcc = asyncHandler(async (req: Request, res: Response, n
         throw (new AppError("Invalid input data", 400));
     }
 
-    const user = await getUserByEmail(utils.formatEmail(email))
+    const user = await getUserPrivateFn(utils.formatEmail(email))
     if (!user) {
         throw new AppError("Check login Credentials", 404);
     }
@@ -66,6 +69,8 @@ export const handleLoginAcc = asyncHandler(async (req: Request, res: Response, n
     if (!isMatch) {
         throw new AppError("Invalid email or password", 400);
     }
+
+    const safeUser = await getUserByEmail(utils.formatEmail(email))
 
 
     const accessToken = jwt.sign(
@@ -89,7 +94,7 @@ export const handleLoginAcc = asyncHandler(async (req: Request, res: Response, n
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    return res.status(200).json(new ApiResponse("success", { user, accessToken }));
+    return res.status(200).json(new ApiResponse("success", { user: safeUser, accessToken }));
 
 })
 

@@ -6,9 +6,6 @@ import { paginate } from '@/utils/pagintion';
 
 const prisma = new PrismaClient()
 
-//MAIN FUNCTION
-// ------------------------------------- START -----------------------
-// TODO : disable send to self
 export const createDonation = async (
     donor: User,
     beneficiaryId: string,
@@ -117,7 +114,6 @@ export const createDonation = async (
     return data
 };
 
-// ------------------------------------- END -----------------------
 
 
 export const countUserDonations = async (userId: string) => {

@@ -14,11 +14,15 @@
     "build": "npm run clean && tsc && cp -r src/prisma/ dist/prisma/",
     "db:deploy": "cd ./src && npx prisma migrate deploy",
     "db:reset": "cd ./src && npx prisma migrate reset --force",
-    "db:migrate": "cd ./src && npx prisma migrate dev --name add_other_models",
+    "db:migrate": "cd ./src && npx prisma migrate dev --name set_default_walletBalance_to_0",
     "db:init": "cd ./src && npx prisma generate",
     "start": "node  dist/server.js",
     "start:prod": "npm run db:deploy:prod && npm run start",
-    "db:deploy:prod": "cd ./dist && npx prisma migrate deploy"
+    "db:deploy:prod": "cd ./dist && npx prisma migrate deploy",
+    "db:seed": "npx prisma db seed --schema ./src/prisma/schema.prisma"
+  },
+  "prisma": {
+    "seed": "ts-node ./src/prisma/seed.ts"
   },
   "_moduleAliases": {
     "@": "./src"
@@ -39,7 +43,8 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "tsconfig-paths": "^4.2.0",
-    "ulid": "^3.0.0"
+    "ulid": "^3.0.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",
@@ -60,7 +65,7 @@
     "typescript": "^5.8.2"
   },
   "engines": {
-    "node": "^20.14.0",
+    "node": "^22.14.0",
     "yarn": "^1.22.19"
   }
 }

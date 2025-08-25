@@ -84,6 +84,7 @@ router.post('/login', handleLoginAcc)
  *         schema:
  *           type: string
  *         required: true
+ *         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkNzEwYzI0NC1kMzRmLTQ4OGEtYWIyYS03NDUzMDIxYzIyODgiLCJpYXQiOjE3NTYxMTUxMDQsImV4cCI6MTc1NjcxOTkwNH0.eedeTOuvLma-vAwKtVp4Wco1t0MFV8lCmQXExduXp8g
  *         description: HTTP-only refresh token cookie
  *     responses:
  *       200:
