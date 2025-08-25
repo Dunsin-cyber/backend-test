@@ -4,7 +4,7 @@ import { AppError } from '@/utils/AppError';
 import { NextFunction, Request, Response } from 'express';
 import { setTransactionPIN, createDonation, donationsInPeriod, getDonationById } from '@/services/transaction.service';
 import { getUserPrivateFn } from '@/services/auth.service';
-
+import { validate as uuidValidate } from 'uuid';
 import utils from '@/utils/index';
 import { User } from '@prisma/client';
 
@@ -20,7 +20,7 @@ export const handleCreateTxPIN = asyncHandler(async (req: Request, res: Response
     await setTransactionPIN(user.id, req.body.pin);
 
 
-    return res.status(200).json(new ApiResponse("success", "Pin created successfully"));
+    return res.status(201).json(new ApiResponse("success", "Pin created successfully"));
 
 })
 
@@ -57,7 +57,7 @@ export const handleCreateDonation = asyncHandler(async (req: Request, res: Respo
     const donation = await createDonation(user, beneficiary.id, amount, transactionPin);
 
 
-    return res.status(200).json(new ApiResponse("success", donation));
+    return res.status(201).json(new ApiResponse("success", donation));
 
 })
 
@@ -98,7 +98,10 @@ export const handleDonationDetails = asyncHandler(async (req: Request, res: Resp
     if (!donationId) {
         throw new AppError("Donation ID is required", 400);
     }
-
+    const validUUID = uuidValidate(donationId);
+    if (!validUUID) {
+        throw new AppError("Invalid donation ID format", 400);
+    }
     const donation = await getDonationById(donationId);
 
     if (!donation) {

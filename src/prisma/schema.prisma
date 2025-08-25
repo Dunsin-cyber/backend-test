@@ -35,6 +35,8 @@ model Wallet {
   userId  String @id @unique
   user    User   @relation(fields: [userId], references: [id])
 
+  transactionEntries TransactionEntry[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -42,12 +44,13 @@ model Wallet {
 }
 
 model Donation {
-  id            String @id @default(uuid())
+  id            String       @id @default(uuid())
   amount        Float
   donorId       String
   beneficiaryId String
-  donor         User   @relation(fields: [donorId], references: [id])
-  beneficiary   User   @relation("UserReceivedDonations", fields: [beneficiaryId], references: [id])
+  donor         User         @relation(fields: [donorId], references: [id])
+  beneficiary   User         @relation("UserReceivedDonations", fields: [beneficiaryId], references: [id])
+  transaction   Transaction?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -56,9 +59,42 @@ model Donation {
   @@index([beneficiaryId])
 }
 
-// TODO ADD TRANSACTIOJN MODEL AND RELATION TO DONATION
-// model Transaction {
-//   id 
-//   prev balacne
-// balacne afeter tx
-// }
+model Transaction {
+  id          String          @id @default(uuid())
+  type        TransactionType
+  reference   String? // e.g. external reference, donationId, airtimeId
+  description String?
+
+  entries TransactionEntry[]
+
+  donation   Donation? @relation(fields: [donationId], references: [id])
+  donationId String?   @unique
+
+  createdAt DateTime @default(now())
+}
+
+model TransactionEntry {
+  id            String      @id @default(uuid())
+  transactionId String
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+
+  walletId String
+  wallet   Wallet @relation(fields: [walletId], references: [userId])
+
+  amount        Float // positive for credit, negative for debit
+  balanceBefore Float
+  balanceAfter  Float
+
+  createdAt DateTime @default(now())
+
+  @@index([transactionId])
+  @@index([walletId])
+}
+
+enum TransactionType {
+  DONATION
+  AIRTIME_PURCHASE
+  WITHDRAWAL
+  DEPOSIT
+  TRANSFER
+}

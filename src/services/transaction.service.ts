@@ -36,6 +36,7 @@ export const createDonation = async (
 
 
     const data = await prisma.$transaction(async (tx) => {
+        // ? 1 - GET DONAOR AND BENEFICIARY WALLETS
 
         const donorWallet = await tx.wallet.findUnique({
             where: { userId: donor.id },
@@ -59,8 +60,8 @@ export const createDonation = async (
             throw new AppError("Beneficiary wallet not found", 404);
         }
 
-
-        const donated = await tx.donation.create({
+        // ? 2 -CREATE DONATION RECORD
+        const donation = await tx.donation.create({
             data: {
                 amount,
                 donorId: donor.id,
@@ -68,22 +69,60 @@ export const createDonation = async (
             }
         });
 
-        // -------------------------STARTS HERE
-        await tx.wallet.update({
+
+        //? 3 - CREATE TRANSACTION RECORD
+
+        const transaction = await tx.transaction.create({
+            data: {
+                type: "DONATION",
+                description: `Donation of N${amount} from ${donor.id} to ${beneficiaryId}`,
+                donationId: donation.id
+            }
+        })
+
+
+        //? 4 - UPDATE WALLET BALANCE
+        const updatedDonorWallet = await tx.wallet.update({
             where: { userId: donor.id },
             data: { balance: { decrement: amount } }
         });
 
 
-        await tx.wallet.update({
+        const updatedBeneficiaryWallet = await tx.wallet.update({
             where: { userId: beneficiaryId },
             data: { balance: { increment: amount } }
         });
 
-        // -------------------------STARTS HERE
+        //? 5 - CREATE TRANSCATION ENTRY ROWS
+
+        const debitEntry = await tx.transactionEntry.create({
+            data: {
+                transactionId: transaction.id,
+                walletId: donor.id,
+                amount: -amount,
+                balanceBefore: donorWallet.balance,
+                balanceAfter: updatedDonorWallet.balance
+            }
+        })
+
+        const creditEntry = await tx.transactionEntry.create({
+            data: {
+                transactionId: transaction.id,
+                walletId: beneficiaryId,
+                amount: +amount,
+                balanceBefore: beneficiaryWallet.balance,
+                balanceAfter: updatedBeneficiaryWallet.balance
+            }
+        })
 
 
-        return donated
+
+
+        return {
+            donation,
+            transaction,
+            entries: [debitEntry, creditEntry]
+        }
     });
 
     return data
