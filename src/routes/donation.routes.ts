@@ -61,21 +61,21 @@ router.post('/create', handleCreateDonation)
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: start
+ *         name: from
  *         schema:
  *           type: string
- *           format: date-time
- *         required: true
- *         description: Start date for filtering donations
- *         example: "2023-01-01T00:00:00Z"
+ *           minimum: 1
+ *         required: false
+ *         description: start date
+ *         example: "01/02/2024"
  *       - in: query
- *         name: end
+ *         name: to
  *         schema:
  *           type: string
- *           format: date-time
- *         required: true
- *         description: End date for filtering donations
- *         example: "2025-12-31T23:59:59Z"
+ *           minimum: 1
+ *         required: false
+ *         description: end date
+ *         example: "12/2025"
  *       - in: query
  *         name: page
  *         schema:

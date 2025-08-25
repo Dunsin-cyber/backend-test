@@ -28,7 +28,26 @@ export const handleCreateTxPIN = asyncHandler(async (req: Request, res: Response
 export const handleGetUserTransactions = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 
     const user = (req as Request & { user?: User }).user!
-   const txs =  await getUserTransactions(user.id);
+
+    const { from, to, limit, page } = req.query;
+    let startDate
+    let endDate;
+
+    if (from) {
+        startDate = utils.dataParser(from as string)
+    }
+    if (to) {
+        endDate = utils.dataParser(to as string)
+    }
+
+    if ((startDate && !endDate) || (!startDate && endDate)) {
+        throw new AppError("There must be both start and end date", 401);
+    }
+
+    const date = { start: startDate?.start, end: endDate?.end }
+
+
+    const txs = await getUserTransactions(user.id, date, page as string, limit as string);
 
     return res.status(200).json(new ApiResponse("success", txs));
 

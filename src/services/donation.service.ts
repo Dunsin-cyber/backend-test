@@ -124,29 +124,28 @@ export const countUserDonations = async (userId: string) => {
 
 
 
-// TODO: filter my dmy and merge it into getUserDonations
-export const donationsInPeriod = async (userId: string, start: Date, end: Date, page?: string, limit?: string) => {
-    var page_;
-    var limit_;
-    if (page) {
-        page_ = +page;
+export const donationsInPeriod = async (
+    userId: string,
+    date?: { start?: Date; end?: Date },
+    page?: string,
+    limit?: string
+) => {
+    const where: any = { donorId: userId };
 
+    if ((date && date.start) && date.start) {
+        where.createdAt = {
+            gte: date.start,
+            lte: date.end,
+        };
     }
-    if (limit) {
-        limit_ = +limit;
 
-    }
-    const data = await paginate({
-        model: 'donation',
-        where: {
-            donorId: userId,
-            createdAt: { gte: start, lte: end }
-        },
-        orderBy: { createdAt: 'desc' },
-        page: page_,
-        limit: limit_
+    return paginate({
+        model: "donation",
+        where,
+        orderBy: { createdAt: "desc" },
+        page: page ? +page : undefined,
+        limit: limit ? +limit : undefined,
     });
-    return data;
 };
 
 

@@ -52,18 +52,26 @@ export const handleGetUserDonations = asyncHandler(async (req: Request, res: Res
 export const handleFilterDonations = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const user = (req as Request & { user?: User }).user!
 
-    const { start, end, limit, page } = req.query;
-    if (!start || !end) {
-        throw new AppError("Start and end dates are required", 400);
-    }
-    const startDate = new Date(start as string);
-    const endDate = new Date(end as string);
+    const { from, to, limit, page } = req.query;
+    let startDate
+    let endDate;
 
-    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-        throw new AppError("Invalid date format", 400);
+    if (from) {
+        startDate = utils.dataParser(from as string)
+    }
+    if (to) {
+        endDate = utils.dataParser(to as string)
     }
 
-    const donations = await donationsInPeriod(user.id, startDate, endDate, page as string, limit as string);
+    if ((startDate && !endDate) || (!startDate && endDate)) {
+        throw new AppError("There must be both start and end date", 401);
+    }
+
+    const date = { start: startDate?.start, end: endDate?.end }
+
+
+
+    const donations = await donationsInPeriod(user.id, date, page as string, limit as string);
 
     if (!donations) {
         throw new AppError("No donations found in this period", 404);
@@ -75,7 +83,7 @@ export const handleFilterDonations = asyncHandler(async (req: Request, res: Resp
 }
 )
 
-// TODO: chck if it is a valid uuid
+
 export const handleDonationDetails = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const donationId = req.params.id;
     if (!donationId) {
